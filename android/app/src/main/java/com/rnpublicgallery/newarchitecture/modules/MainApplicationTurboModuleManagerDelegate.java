@@ -1,4 +1,4 @@
-package com.rnpublicgallery.newarchitecture.modules;
+package com.rnpublicgallery.aimho.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

@@ -1,4 +1,4 @@
-package com.rnpublicgallery;
+package com.rnpublicgallery.aimho;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
