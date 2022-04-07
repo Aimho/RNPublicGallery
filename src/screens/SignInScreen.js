@@ -1,5 +1,6 @@
-import React, {useState, useRef} from 'react';
+import React, {useState} from 'react';
 import {
+  Alert,
   Keyboard,
   KeyboardAvoidingView,
   StyleSheet,
@@ -8,14 +9,14 @@ import {
   Platform,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import BorderedInput from '../components/BorderedInput';
-import CustomButton from '../components/CustomButton';
+import SignForm from '../components/SignForm';
+import SignButtons from '../components/SignButtons';
+import {signIn, signUp} from '../lib/auth';
 
-function SignInScreen({navigation, route}) {
+function SignInScreen({route}) {
   const {isSignUp} = route.params ?? {};
 
-  const passwordRef = useRef();
-  const confirmPasswordRef = useRef();
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -25,26 +26,23 @@ function SignInScreen({navigation, route}) {
   const onChangeText = ({name, text}) => {
     setForm({...form, [name]: text});
   };
-  const onSubmit = () => {
+
+  const onSubmit = async () => {
+    setLoading(true);
     Keyboard.dismiss();
-    console.log(form);
-  };
 
-  const ActionButtons = () => {
-    const onBack = () => navigation.goBack();
-    const onSignIn = () => navigation.push('SignIn', {isSignUp: true});
+    const {email, password} = form;
+    const info = {email, password};
 
-    return isSignUp ? (
-      <React.Fragment>
-        <CustomButton title="회원가입" hasMarginBottom onPress={onSubmit} />
-        <CustomButton title="로그인" theme="secondary" onPress={onBack} />
-      </React.Fragment>
-    ) : (
-      <React.Fragment>
-        <CustomButton title="로그인" hasMarginBottom onPress={onSubmit} />
-        <CustomButton title="회원가입" theme="secondary" onPress={onSignIn} />
-      </React.Fragment>
-    );
+    try {
+      const {user} = isSignUp ? await signUp(info) : await signIn(info);
+      console.log(user);
+    } catch (e) {
+      Alert.alert('실패');
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -54,46 +52,17 @@ function SignInScreen({navigation, route}) {
       <SafeAreaView style={styles.fullscreen}>
         <Text style={styles.text}>RNPublicGallery</Text>
         <View style={styles.form}>
-          <BorderedInput
-            hasMarginBottom
-            placeholder="이메일"
-            value={form.email}
-            onChangeText={text => onChangeText({name: 'email', text})}
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoCompleteType="email"
-            keyboardType="email-address"
-            returnKeyType="next"
-            onSubmitEditing={() => passwordRef.current?.focus()}
+          <SignForm
+            isSignUp={isSignUp}
+            onSubmit={onSubmit}
+            form={form}
+            onChangeText={onChangeText}
           />
-          <BorderedInput
-            secureTextEntry
-            ref={passwordRef}
-            placeholder="비밀번호"
-            hasMarginBottom={isSignUp}
-            value={form.password}
-            onChangeText={text => onChangeText({name: 'password', text})}
-            returnKeyType={isSignUp ? 'next' : 'done'}
-            onSubmitEditing={() =>
-              isSignUp ? confirmPasswordRef.current?.focus() : onSubmit()
-            }
+          <SignButtons
+            isSignUp={isSignUp}
+            onSubmit={onSubmit}
+            loading={loading}
           />
-          {isSignUp && (
-            <BorderedInput
-              secureTextEntry
-              ref={confirmPasswordRef}
-              placeholder="비밀번호 확인"
-              value={form.confirmPassword}
-              onChangeText={text =>
-                onChangeText({name: 'confirmPassword', text})
-              }
-              returnKeyType="done"
-              onSubmitEditing={onSubmit}
-            />
-          )}
-          <View style={styles.buttons}>
-            <ActionButtons />
-          </View>
         </View>
       </SafeAreaView>
     </KeyboardAvoidingView>
@@ -119,8 +88,5 @@ const styles = StyleSheet.create({
     marginTop: 64,
     width: '100%',
     paddingHorizontal: 16,
-  },
-  buttons: {
-    marginTop: 64,
   },
 });
