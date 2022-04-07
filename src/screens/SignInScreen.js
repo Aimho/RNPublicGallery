@@ -9,20 +9,25 @@ import {
   Platform,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+
+import {getUser} from '../lib/users';
+import {signIn, signUp} from '../lib/auth';
+
+import {useUserContext} from '../context/UserContext';
+
 import SignForm from '../components/SignForm';
 import SignButtons from '../components/SignButtons';
-import {signIn, signUp} from '../lib/auth';
-import {getUser} from '../lib/users';
 
 function SignInScreen({navigation, route}) {
   const {isSignUp} = route.params ?? {};
 
-  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     email: '',
     password: '',
     confirmPassword: '',
   });
+  const [loading, setLoading] = useState(false);
+  const {setUser} = useUserContext();
 
   const onChangeText = ({name, text}) => {
     setForm({...form, [name]: text});
@@ -42,13 +47,13 @@ function SignInScreen({navigation, route}) {
 
     try {
       const {user} = isSignUp ? await signUp(info) : await signIn(info);
-
       const profile = await getUser(user.uid);
-      if (!profile) {
-        return navigation.navigate('Welcome', {uid: user.uid});
-      }
 
-      // 구현예정
+      if (!profile) {
+        navigation.navigate('Welcome', {uid: user.uid});
+      } else {
+        setUser(profile);
+      }
     } catch (e) {
       const messages = {
         'auth/email-already-in-use': '이미 가입된 이메일입니다.',
