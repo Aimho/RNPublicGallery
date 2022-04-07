@@ -6,8 +6,9 @@ import {
   Platform,
   ActionSheetIOS,
 } from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 
 import UploadModeModal from './UploadModeModal';
@@ -23,6 +24,7 @@ const imagePickerOption = {
 
 function CameraButton() {
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
 
   const bottom = Platform.select({
@@ -34,7 +36,7 @@ function CameraButton() {
     if (res.didCancel || !res) {
       return;
     }
-    console.log(res);
+    navigation.push('Upload', {res});
   };
 
   const onLaunchCamera = () => {
