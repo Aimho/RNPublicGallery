@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {
   ActivityIndicator,
-  Image,
   StyleSheet,
   View,
   Platform,
@@ -18,6 +17,7 @@ import {useUserContext} from '../context/UserContext';
 
 import BorderedInput from './BorderedInput';
 import CustomButton from './CustomButton';
+import Avatar from './Avatar';
 
 function SetupProfile() {
   const navigation = useNavigation();
@@ -96,13 +96,9 @@ function SetupProfile() {
   return (
     <View style={styles.block}>
       <Pressable onPress={onSelectImage}>
-        <Image
-          style={styles.circle}
-          source={
-            response
-              ? {uri: response?.assets[0]?.uri}
-              : require('../assets/img/user_default.png')
-          }
+        <Avatar
+          source={response && {uri: response?.assets[0]?.uri}}
+          size={128}
         />
       </Pressable>
       <View style={styles.form}>
@@ -139,12 +135,6 @@ const styles = StyleSheet.create({
     marginTop: 24,
     paddingHorizontal: 16,
     width: '100%',
-  },
-  circle: {
-    backgroundColor: '#cdcdcd',
-    borderRadius: 64,
-    width: 128,
-    height: 128,
   },
   form: {marginTop: 16, width: '100%'},
   spinnerWrapper: {
