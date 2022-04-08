@@ -48,3 +48,7 @@ export async function getNewerPosts(id, userId) {
     userId,
   });
 }
+
+export function removePost(id) {
+  return postsCollection.doc(id).delete();
+}
