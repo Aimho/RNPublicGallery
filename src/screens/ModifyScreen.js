@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 
+import events from '../lib/events';
 import {updatePost} from '../lib/posts';
 import IconRightButton from '../components/IconRightButton';
 
@@ -18,7 +19,9 @@ function ModifyScreen() {
 
   const onSubmit = useCallback(async () => {
     await updatePost({id: params.id, description});
-    //   post list update
+
+    events.emit('updatePost', {postId: params.id, description});
+
     navigation.pop();
   }, [navigation, params.id, description]);
 

@@ -17,6 +17,17 @@ function usePosts(userId) {
     [posts],
   );
 
+  const updatePost = useCallback(
+    ({postId, description}) => {
+      // id가 일치하는 포스트를 찾아서 description 반영
+      const nextPosts = posts.map(post =>
+        post.id === postId ? {...post, description} : post,
+      );
+      setPosts(nextPosts);
+    },
+    [posts],
+  );
+
   const onLoadMore = async () => {
     if (noMorePost || !posts || posts.length < PAGE_SIZE) {
       return;
@@ -57,8 +68,9 @@ function usePosts(userId) {
   }, [userId]);
 
   usePostsEventEffect({
-    refresh: onRefresh,
+    updatePost,
     removePost,
+    refresh: onRefresh,
     enabled: !userId || userId === user.id,
   });
 

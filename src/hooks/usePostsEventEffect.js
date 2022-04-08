@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 import events from '../lib/events';
 
-function usePostsEventEffect({refresh, removePost, enabled}) {
+function usePostsEventEffect({refresh, removePost, updatePost, enabled}) {
   useEffect(() => {
     if (!enabled) {
       return;
@@ -9,11 +9,13 @@ function usePostsEventEffect({refresh, removePost, enabled}) {
 
     events.addListener('refresh', refresh);
     events.addListener('removePost', removePost);
+    events.addListener('updatePost', updatePost);
     return () => {
       events.removeListener('refresh', refresh);
       events.removeListener('removePost', removePost);
+      events.removeListener('updatePost', updatePost);
     };
-  }, [refresh, removePost, enabled]);
+  }, [refresh, removePost, updatePost, enabled]);
 }
 
 export default usePostsEventEffect;
