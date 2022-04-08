@@ -1,13 +1,15 @@
 import React from 'react';
+import {useNavigation} from '@react-navigation/native';
 import {StyleSheet, useWindowDimensions, Image, Pressable} from 'react-native';
 
 function PostGridItem({post}) {
+  const navigation = useNavigation();
   const dimensions = useWindowDimensions();
   // 한 열에 3개의 컴포넌트가 보이게 함
   const size = (dimensions.width - 3) / 3;
 
   const onPress = () => {
-    // Todo: 단일 포스트 조회 화면 띄우기
+    navigation.navigate('Post', {post});
   };
 
   return (
