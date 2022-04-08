@@ -6,6 +6,7 @@ import UploadScreen from './UploadScreen';
 import SignInScreen from './SignInScreen';
 import WelcomeScreen from './WelcomeScreen';
 import ModifyScreen from './ModifyScreen';
+import SettingScreen from './SettingScreen';
 
 import {getUser} from '../lib/users';
 import {subscribeAuth} from '../lib/auth';
@@ -54,6 +55,11 @@ function RootStack() {
             name="Modify"
             component={ModifyScreen}
             options={{title: '설명 수정', headerBackTitle: '뒤로가기'}}
+          />
+          <Stack.Screen
+            name="Setting"
+            component={SettingScreen}
+            options={{title: '설정', headerBackTitle: '뒤로가기'}}
           />
         </>
       ) : (
