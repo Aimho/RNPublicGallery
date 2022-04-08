@@ -1,7 +1,11 @@
 import {useEffect, useState, useCallback} from 'react';
+
+import {useUserContext} from '../context/UserContext';
+import usePostsEventEffect from './usePostsEventEffect';
 import {getNewerPosts, getOlderPosts, getPosts, PAGE_SIZE} from '../lib/posts';
 
 function usePosts(userId) {
+  const {user} = useUserContext();
   const [posts, setPosts] = useState(null);
   const [noMorePost, setNoMorePost] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -52,9 +56,14 @@ function usePosts(userId) {
     });
   }, [userId]);
 
+  usePostsEventEffect({
+    refresh: onRefresh,
+    removePost,
+    enabled: !userId || userId === user.id,
+  });
+
   return {
     posts,
-    removePost,
     noMorePost,
     onLoadMore,
     refreshing,
