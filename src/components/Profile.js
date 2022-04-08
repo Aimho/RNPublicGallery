@@ -18,7 +18,8 @@ const renderItem = ({item}) => <PostGridItem post={item} />;
 
 function Profile({userId}) {
   const [user, setUser] = useState(null);
-  const {posts, noMorePost, refreshing, onLoadMore, onRefresh} = usePosts();
+  const {posts, noMorePost, refreshing, onLoadMore, onRefresh} =
+    usePosts(userId);
 
   useEffect(() => {
     getUser(userId).then(setUser);
