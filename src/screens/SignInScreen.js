@@ -50,7 +50,7 @@ function SignInScreen({navigation, route}) {
       const profile = await getUser(user.uid);
 
       if (!profile) {
-        navigation.navigate('Welcome', {uid: user.uid});
+        return navigation.navigate('Welcome', {uid: user.uid});
       } else {
         setUser(profile);
       }
