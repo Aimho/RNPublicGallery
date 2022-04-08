@@ -9,9 +9,10 @@ import {
   KeyboardAvoidingView,
   useWindowDimensions,
 } from 'react-native';
-
 import {v4} from 'uuid';
 import storage from '@react-native-firebase/storage';
+
+import events from '../lib/events';
 import {createPost} from '../lib/posts';
 import {useUserContext} from '../context/UserContext';
 
@@ -66,6 +67,7 @@ function UploadScreen() {
 
     const photoURL = await reference.getDownloadURL();
     await createPost({description, photoURL, user});
+    events.emit('refresh');
     // Todo: post list refresh
   }, [res, user, description, navigation]);
 
