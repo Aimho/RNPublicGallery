@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   FlatList,
   ActivityIndicator,
@@ -6,59 +6,19 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import {getPosts, getOlderPosts, getNewerPosts, PAGE_SIZE} from '../lib/posts';
+import usePosts from '../hooks/usePosts';
 
 import PostCard from '../components/PostCard';
 
 const renderItem = ({item}) => <PostCard {...item} />;
 
 function FeedScreen() {
-  const [posts, setPosts] = useState([]);
-  // 마지막 포스트까지 조회했음을 명시하는 상태
-  const [noMorePost, setNoMorePost] = useState(false);
-  const [refreshing, setRefresing] = useState(false);
+  const {posts, noMorePost, refreshing, onLoadMore, onRefresh} = usePosts();
 
-  useEffect(() => {
-    getPosts().then(setPosts);
-  }, []);
-
-  const onRefresh = async () => {
-    if (!posts || posts.length == 0 || refreshing) {
-      return;
-    }
-
-    const firstPost = posts[0];
-    setRefresing(true);
-    const newerPosts = await getNewerPosts(firstPost.id);
-    setRefresing(false);
-    if (newerPosts.length === 0) {
-      return;
-    }
-
-    setPosts(newerPosts.concat(posts));
-  };
-
-  const onLoadMore = async () => {
-    if (noMorePost || !posts || posts.length < PAGE_SIZE) {
-      return;
-    }
-
-    const lastPost = posts[posts.length - 1];
-    const olderPosts = await getOlderPosts(lastPost.id);
-    setPosts(posts.concat(olderPosts));
-    if (olderPosts.length < PAGE_SIZE) {
-      setNoMorePost(true);
-    }
-  };
-
-  const ListFooterComponent = () => {
-    if (noMorePost) {
-      return null;
-    }
-    return (
+  const ListFooterComponent = () =>
+    !noMorePost && (
       <ActivityIndicator style={styles.spinner} size={32} color="#6200ee" />
     );
-  };
 
   return (
     <FlatList
