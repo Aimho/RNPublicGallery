@@ -2,6 +2,7 @@ import {useState} from 'react';
 import {ActionSheetIOS, Platform} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 
+import events from '../lib/events';
 import {removePost} from '../lib/posts';
 
 function usePostActions({id, description}) {
@@ -21,7 +22,7 @@ function usePostActions({id, description}) {
       navigation.pop();
     }
 
-    // Todo: 홈 및 프로필 화면의 목록 업데이트
+    events.emit('removePost', id);
   };
 
   const onPressMore = () => {

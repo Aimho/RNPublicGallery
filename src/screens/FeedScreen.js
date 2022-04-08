@@ -22,14 +22,17 @@ const renderItem = ({item}) => (
 );
 
 function FeedScreen() {
-  const {posts, noMorePost, refreshing, onLoadMore, onRefresh} = usePosts();
+  const {posts, removePost, noMorePost, refreshing, onLoadMore, onRefresh} =
+    usePosts();
 
   useEffect(() => {
     events.addListener('refresh', onRefresh);
+    events.addListener('removePost', removePost);
     return () => {
       events.removeListener('refresh', onRefresh);
+      events.removeListener('removePost', removePost);
     };
-  }, [onRefresh]);
+  }, [onRefresh, removePost]);
 
   const ListFooterComponent = () =>
     !noMorePost && (

@@ -20,7 +20,7 @@ const renderItem = ({item}) => <PostGridItem post={item} />;
 
 function Profile({userId}) {
   const [user, setUser] = useState(null);
-  const {posts, noMorePost, refreshing, onLoadMore, onRefresh} =
+  const {posts, removePost, noMorePost, refreshing, onLoadMore, onRefresh} =
     usePosts(userId);
 
   const {user: me} = useUserContext();
@@ -37,10 +37,12 @@ function Profile({userId}) {
     }
 
     events.addListener('refresh', onRefresh);
+    events.addListener('removePost', removePost);
     return () => {
       events.removeListener('refresh', onRefresh);
+      events.removeListener('removePost', removePost);
     };
-  }, [isMyProfile, onRefresh]);
+  }, [isMyProfile, onRefresh, removePost]);
 
   if (!user || !posts) {
     return (

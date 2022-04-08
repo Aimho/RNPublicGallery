@@ -6,6 +6,13 @@ function usePosts(userId) {
   const [noMorePost, setNoMorePost] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
+  const removePost = useCallback(
+    postId => {
+      setPosts(posts.filter(post => post.id !== postId));
+    },
+    [posts],
+  );
+
   const onLoadMore = async () => {
     if (noMorePost || !posts || posts.length < PAGE_SIZE) {
       return;
@@ -47,6 +54,7 @@ function usePosts(userId) {
 
   return {
     posts,
+    removePost,
     noMorePost,
     onLoadMore,
     refreshing,
