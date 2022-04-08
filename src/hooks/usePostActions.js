@@ -10,7 +10,7 @@ function usePostActions({id, description}) {
   const [isSelecting, setIsSelecting] = useState(false);
 
   const edit = () => {
-    console.log('TODO: edit');
+    navigation.navigate('Modify', {id, description});
   };
 
   const remove = async () => {
