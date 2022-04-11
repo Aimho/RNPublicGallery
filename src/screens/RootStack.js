@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react';
+import SplashScreen from 'react-native-splash-screen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import MainTab from './MainTab';
@@ -25,6 +26,7 @@ function RootStack() {
       unsubscribe();
 
       if (!currentUser) {
+        SplashScreen.hide();
         return;
       }
 

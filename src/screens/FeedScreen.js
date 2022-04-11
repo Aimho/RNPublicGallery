@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   FlatList,
   ActivityIndicator,
@@ -9,6 +9,7 @@ import {
 import usePosts from '../hooks/usePosts';
 
 import PostCard from '../components/PostCard';
+import SplashScreen from 'react-native-splash-screen';
 
 const renderItem = ({item}) => (
   <PostCard
@@ -22,6 +23,13 @@ const renderItem = ({item}) => (
 
 function FeedScreen() {
   const {posts, noMorePost, refreshing, onLoadMore, onRefresh} = usePosts();
+
+  const postsReady = posts !== null;
+  useEffect(() => {
+    if (postsReady) {
+      SplashScreen.hide();
+    }
+  }, [postsReady]);
 
   const ListFooterComponent = () =>
     !noMorePost && (
